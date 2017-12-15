@@ -1,0 +1,43 @@
+version: '3'
+services:
+  nginx:
+    image: nginx:1.13.6
+    volumes:
+      - ./:/var/www/html
+      - ./docker/server/log/:/var/html/log
+      - ./docker/config/nginx/nginx.conf:/etc/nginx/conf.d/nginx.conf
+    links:
+      - php
+    networks:
+      self:
+        ipv4_address: ${NGINX_HOST}
+  php:
+    build:
+      context: docker/build/php
+    user: 1000:1000
+    links:
+      - mysql
+    volumes:
+      - ./:/var/www/html
+      - ./docker/config/php/php.ini:/usr/local/etc/php/php.ini
+    networks:
+      self:
+        ipv4_address: ${PHP_HOST}
+  mysql:
+    image: mysql:5.7.20
+    environment:
+      MYSQL_USER: ${MYSQL_USERNAME}
+      MYSQL_PASSWORD: ${MYSQL_USERNAME}
+      MYSQL_DATABASE: ${MYSQL_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_PASSWORD_ROOT}
+    volumes:
+      - ./docker/server/mysql:/var/lib/mysql
+    networks:
+      self:
+        ipv4_address: ${MYSQL_HOST}
+networks:
+  self:
+    driver: bridge
+    ipam:
+      config:
+      - subnet: ${NETWORK_SUBNET}
