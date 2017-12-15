@@ -1,7 +1,9 @@
 <?php
-namespace models\car;
+
+namespace app\models;
 
 use Yii;
+use yii\behaviors\TimestampBehavior;
 
 /**
  * Автомобили.
@@ -18,8 +20,25 @@ use Yii;
  * @property integer $updated_at Дата обновления
  *
  */
-class Car
+class Car extends \yii\db\ActiveRecord
 {
+    /**
+     *
+     */
+    const STATUS = [
+        1 => 'не опубликован',
+        2 => 'опубликован',
+    ];
+
+
+    /**
+     *
+     */
+    const CATEGORY_ID = [
+        1 => 'Ниссан',
+        2 => 'Вольво',
+        3 => 'Форд'
+    ];
 
     /**
      * Количество отображаемых элементов в списке.
@@ -34,14 +53,11 @@ class Car
     /**
      * @inheritdoc
      */
-    public function rules()
+    public static function tableName()
     {
-        // Необходимо написать правила валидации
-        $rules = [];
-
-        return $rules;
+        return '{{%car}}';
     }
-    
+
     /**
      * @inheritdoc
      */
@@ -60,5 +76,41 @@ class Car
             'updated_at' => Yii::t('app', 'Дата обновления'),
         ];
 
+    }
+
+    /**
+     * @inheritdoc
+     * @return CarQuery the active query used by this AR class.
+     */
+    public static function find()
+    {
+        return new CarQuery(get_called_class());
+    }
+
+    /**
+     * @return array
+     */
+    public function behaviors()
+    {
+        return [
+            'TimestampBehavior' => TimestampBehavior::class,
+        ];
+    }
+
+
+    /**
+     * @param CarType $type
+     * @return static
+     */
+    public static function create(CarType $type)
+    {
+        $model = new static();
+        $model->status = $type->status;
+        $model->title = $type->title;
+        $model->categoryId = $type->categoryId;
+        $model->price = $type->price;
+        $model->url = $type->url;
+        $model->year = $type->year;
+        return $model;
     }
 }
