@@ -20,8 +20,8 @@ $this->params['breadcrumbs'][] = $this->title;
         <tr>
             <td><?= 'Название' ?></td>
             <td><?= 'Модельный ряд' ?></td>
-            <td><?= 'Цена' ?></td>
-            <td><?= 'Год выпуска' ?></td>
+            <td><?= $dataProvider->getSort()->link('price') ?></td>
+            <td><?= $dataProvider->getSort()->link('year') ?></td>
         </tr>
         <?php foreach ($dataProvider->getModels() as $model): ?>
             <tr>
