@@ -29,15 +29,25 @@ $this->params['breadcrumbs'][] = $this->title;
         'model' => $model,
         'attributes' => [
             'id',
-            'status',
-            'categoryId',
             'title',
-            'image',
+            [
+                'attribute' => 'categoryId',
+                'value' => $model->getCategory(),
+            ],
+            [
+                'attribute' => 'image',
+                'value' => Html::img($model->getImageUrl(), ['class' => 'thumbnail']),
+                'format' => 'raw',
+            ],
             'price',
             'url:url',
             'year',
-            'created_at',
-            'updated_at',
+            [
+                'attribute' => 'status',
+                'value' => $model->getStatus(),
+            ],
+            'created_at:datetime',
+            'updated_at:datetime',
         ],
     ]) ?>
 

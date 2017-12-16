@@ -77,7 +77,8 @@ class CarType extends Model
     {
         return [
             [['title', 'url', 'status', 'categoryId', 'price', 'year'], 'required'],
-            [['status', 'categoryId', 'price', 'year'], 'integer'],
+            [['status', 'categoryId', 'price'], 'integer'],
+            ['year', 'date', 'format' => 'php:Y'],
             [['title', 'url'], 'string', 'max' => 255],
             ['image', 'image', 'skipOnEmpty' => !$this->model->isNewRecord],
         ];

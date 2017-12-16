@@ -1,6 +1,7 @@
 <?php
 
 
+use app\helpers\CarHelper;
 use app\models\Car;
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
@@ -21,14 +22,14 @@ use yii\widgets\ActiveForm;
     <?= $form->field($type, 'categoryId')->dropDownList(Car::CATEGORY_ID) ?>
 
     <?php if (!$type->model->isNewRecord): ?>
-        <img src="<?= $type->model->getUrlImage(); ?>" alt="">
+        <img src="<?= $type->model->getImageUrl(); ?>" class="thumbnail" alt="">
     <?php endif; ?>
 
     <?= $form->field($type, 'image')->fileInput() ?>
 
     <?= $form->field($type, 'price')->input('number') ?>
 
-    <?= $form->field($type, 'year')->input('number') ?>
+    <?= $form->field($type, 'year')->dropDownList(CarHelper::getYearDropDown()) ?>
 
 
     <?= $form->field($type, 'status')->dropDownList(Car::STATUS) ?>

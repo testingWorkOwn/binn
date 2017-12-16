@@ -5,6 +5,7 @@ namespace app\models;
 use DomainException;
 use Yii;
 use yii\behaviors\TimestampBehavior;
+use yii\helpers\ArrayHelper;
 
 /**
  * Автомобили.
@@ -145,8 +146,25 @@ class Car extends \yii\db\ActiveRecord
     /**
      * @return string
      */
-    public function getUrlImage(): string
+    public function getImageUrl(): string
     {
         return static::PATH_UPLOAD_PHOTO . '/' . $this->image;
+    }
+
+    /**
+     * @return string
+     */
+    public function getStatus(): string
+    {
+        return ArrayHelper::getValue(static::STATUS, $this->status);
+    }
+
+
+    /**
+     * @return string
+     */
+    public function getCategory(): string
+    {
+        return ArrayHelper::getValue(static::CATEGORY_ID, $this->categoryId);
     }
 }
