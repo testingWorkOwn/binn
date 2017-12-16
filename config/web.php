@@ -47,6 +47,9 @@ $config = [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
             'rules' => [
+                'backend/<controller:[\w\-]+>/<action:[\w\-]+>/<id:\d+>' => 'backend/<controller>/<action>',
+                'backend/<controller:[\w\-]+>/<action:[\w\-]+>' => 'backend/<controller>/<action>',
+                'backend/<controller:[\w\-]+>' => 'backend/<controller>',
             ],
         ],
     ],

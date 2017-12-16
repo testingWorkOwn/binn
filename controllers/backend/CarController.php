@@ -1,6 +1,6 @@
 <?php
 
-namespace app\controllers;
+namespace app\controllers\backend;
 
 use app\models\CarRepository;
 use app\services\BaseService;
