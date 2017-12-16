@@ -4,6 +4,7 @@ namespace app\models;
 
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
+use yii\db\Expression;
 
 /**
  * CarSearch represents the model behind the search form about `app\models\Car`.
@@ -16,8 +17,8 @@ class CarSearch extends Car
     public function rules()
     {
         return [
-            [['id', 'status', 'categoryId', 'price', 'year', 'created_at', 'updated_at'], 'integer'],
-            [['title', 'image', 'url'], 'safe'],
+            [['id', 'status', 'categoryId', 'price', 'year'], 'integer'],
+            [['title', 'created_at', 'updated_at'], 'safe'],
         ];
     }
 
@@ -62,13 +63,12 @@ class CarSearch extends Car
             'categoryId' => $this->categoryId,
             'price' => $this->price,
             'year' => $this->year,
-            'created_at' => $this->created_at,
-            'updated_at' => $this->updated_at,
         ]);
 
-        $query->andFilterWhere(['like', 'title', $this->title])
-            ->andFilterWhere(['like', 'image', $this->image])
-            ->andFilterWhere(['like', 'url', $this->url]);
+        $query
+            ->andFilterWhere(['like', 'title', $this->title])
+            ->andFilterWhere(['like', new Expression('FROM_UNIXTIME([[created_at]], "%Y-%m-%d")'), $this->created_at])
+            ->andFilterWhere(['like', new Expression('FROM_UNIXTIME([[updated_at]], "%Y-%m-%d")'), $this->updated_at]);
 
         return $dataProvider;
     }
