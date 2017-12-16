@@ -47,6 +47,11 @@ $config = [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
             'rules' => [
+                [
+                    'class' => \app\rules\CarRule::class,
+                    'pattern' => 'car/<url:[\d\w/-]+>',
+                    'route' => '',
+                ],
                 'backend/<controller:[\w\-]+>/<action:[\w\-]+>/<id:\d+>' => 'backend/<controller>/<action>',
                 'backend/<controller:[\w\-]+>/<action:[\w\-]+>' => 'backend/<controller>/<action>',
                 'backend/<controller:[\w\-]+>' => 'backend/<controller>',

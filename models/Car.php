@@ -2,6 +2,7 @@
 
 namespace app\models;
 
+use app\behaviors\TagDependencyBehavior;
 use DomainException;
 use Yii;
 use yii\behaviors\TimestampBehavior;
@@ -96,6 +97,7 @@ class Car extends \yii\db\ActiveRecord
     {
         return [
             'TimestampBehavior' => TimestampBehavior::class,
+            'TagDependencyBehavior' => TagDependencyBehavior::class,
         ];
     }
 

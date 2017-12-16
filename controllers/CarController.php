@@ -33,4 +33,9 @@ class CarController extends Controller
             'searchModel' => $searchModel
         ]);
     }
+
+    public function actionView($id)
+    {
+
+    }
 }

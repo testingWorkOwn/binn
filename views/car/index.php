@@ -2,6 +2,7 @@
 
 use app\models\Car;
 use yii\helpers\Html;
+use yii\helpers\Url;
 use yii\widgets\LinkPager;
 
 /* @var $this yii\web\View */
@@ -11,6 +12,7 @@ use yii\widgets\LinkPager;
 
 $this->title = 'Cars';
 $this->params['breadcrumbs'][] = $this->title;
+
 ?>
 <div class="car-index">
 
@@ -25,7 +27,7 @@ $this->params['breadcrumbs'][] = $this->title;
         </tr>
         <?php foreach ($dataProvider->getModels() as $model): ?>
             <tr>
-                <td><?= $model->title ?></td>
+                <td><a href="<?= Url::to(['view', 'id' => $model->id]) ?>"><?= $model->title ?></a></td>
                 <td><?= $model->getCategory() ?></td>
                 <td><?= $model->price ?></td>
                 <td><?= $model->year ?></td>
