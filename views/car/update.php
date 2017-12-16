@@ -3,11 +3,11 @@
 use yii\helpers\Html;
 
 /* @var $this yii\web\View */
-/* @var $model app\models\Car */
+/* @var $type \app\models\CarType */
 
-$this->title = 'Update Car: ' . $model->title;
+$this->title = 'Update Car: ' . $type->title;
 $this->params['breadcrumbs'][] = ['label' => 'Cars', 'url' => ['index']];
-$this->params['breadcrumbs'][] = ['label' => $model->title, 'url' => ['view', 'id' => $model->id]];
+$this->params['breadcrumbs'][] = ['label' => $type->title, 'url' => ['view', 'id' => $type->model->id]];
 $this->params['breadcrumbs'][] = 'Update';
 ?>
 <div class="car-update">
@@ -15,7 +15,7 @@ $this->params['breadcrumbs'][] = 'Update';
     <h1><?= Html::encode($this->title) ?></h1>
 
     <?= $this->render('_form', [
-        'model' => $model,
+        'type' => $type,
     ]) ?>
 
 </div>

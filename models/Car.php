@@ -2,6 +2,7 @@
 
 namespace app\models;
 
+use DomainException;
 use Yii;
 use yii\behaviors\TimestampBehavior;
 
@@ -109,8 +110,43 @@ class Car extends \yii\db\ActiveRecord
         $model->title = $type->title;
         $model->categoryId = $type->categoryId;
         $model->price = $type->price;
-        $model->url = $type->url;
+        $model->updateUrl($type->url);
         $model->year = $type->year;
         return $model;
+    }
+
+    /**
+     * @param CarType $type
+     */
+    public function edit(CarType $type): void
+    {
+        $this->status = $type->status;
+        $this->title = $type->title;
+        $this->categoryId = $type->categoryId;
+        $this->price = $type->price;
+        $this->updateUrl($type->url);
+        $this->year = $type->year;
+    }
+
+    /**
+     * @param string $url
+     */
+    public function updateUrl(string $url): void
+    {
+        $this->url = $url;
+        if ($this->isAttributeChanged('url')) {
+            $repository = new CarRepository();
+            if ($repository->existsUrl($this->url)) {
+                throw new DomainException(sprintf('Url "%s" has already been taken', $this->url));
+            }
+        }
+    }
+
+    /**
+     * @return string
+     */
+    public function getUrlImage(): string
+    {
+        return static::PATH_UPLOAD_PHOTO . '/' . $this->image;
     }
 }

@@ -2,6 +2,8 @@
 
 namespace app\controllers;
 
+use app\models\CarRepository;
+use app\services\BaseService;
 use app\services\CarService;
 use DomainException;
 use Yii;
@@ -21,23 +23,37 @@ class CarController extends Controller
      * @var CarService
      */
     private $carService;
+    /**
+     * @var CarRepository
+     */
+    private $carRepository;
+    /**
+     * @var BaseService
+     */
+    private $baseService;
 
     /**
      * CarController constructor.
-     * @param CarService $carService
      * @param \yii\base\Module $id
      * @param Module $module
+     * @param CarService $carService
+     * @param CarRepository $carRepository
+     * @param BaseService $baseService
      * @param array $config
      */
     public function __construct(
         $id,
         Module $module,
         CarService $carService,
+        CarRepository $carRepository,
+        BaseService $baseService,
         array $config = []
     )
     {
         parent::__construct($id, $module, $config);
         $this->carService = $carService;
+        $this->carRepository = $carRepository;
+        $this->baseService = $baseService;
     }
 
 
@@ -117,15 +133,24 @@ class CarController extends Controller
      */
     public function actionUpdate($id)
     {
-        $model = $this->findModel($id);
-
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
-        } else {
-            return $this->render('update', [
-                'model' => $model,
-            ]);
+        $model = $this->carRepository->findOne($id);
+        $this->baseService->createNotFoundHttpException($model);
+        $type = $this->carService->createType($model);
+        if ($type->load(Yii::$app->request->post()) && $type->validate()) {
+            $transaction = Yii::$app->db->beginTransaction();
+            try {
+                $model = $this->carService->update($id, $type);
+                $transaction->commit();
+                return $this->redirect(['view', 'id' => $model->id]);
+            } catch (DomainException $exception) {
+                $transaction->rollBack();
+                Yii::$app->errorHandler->logException($exception);
+                Yii::$app->session->addFlash('warning', $exception->getMessage());
+            }
         }
+        return $this->render('update', [
+            'type' => $type,
+        ]);
     }
 
     /**

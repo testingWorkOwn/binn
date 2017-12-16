@@ -41,6 +41,10 @@ class CarType extends Model
      */
     public $url;
 
+
+    /**
+     * @var Car
+     */
     public $model;
 
     /**
@@ -75,8 +79,7 @@ class CarType extends Model
             [['title', 'url', 'status', 'categoryId', 'price', 'year'], 'required'],
             [['status', 'categoryId', 'price', 'year'], 'integer'],
             [['title', 'url'], 'string', 'max' => 255],
-            ['image', 'image', 'skipOnEmpty' => false],
-            [['url'], 'unique', 'targetClass' => Car::class],
+            ['image', 'image', 'skipOnEmpty' => !$this->model->isNewRecord],
         ];
     }
 
@@ -96,6 +99,4 @@ class CarType extends Model
         $this->image = UploadedFile::getInstance($this, 'image');
         return parent::beforeValidate();
     }
-
-
 }

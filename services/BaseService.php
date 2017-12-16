@@ -10,6 +10,7 @@ namespace app\services;
 
 
 use yii\db\ActiveRecord;
+use yii\web\NotFoundHttpException;
 
 /**
  * Class BaseService
@@ -24,6 +25,17 @@ class BaseService
     {
         if (!$model->save()) {
             throw new \RuntimeException('Saving error');
+        }
+    }
+
+    /**
+     * @param ActiveRecord|null $model
+     * @throws NotFoundHttpException
+     */
+    public function createNotFoundHttpException(ActiveRecord $model = null)
+    {
+        if (is_null($model)) {
+            throw new NotFoundHttpException('The required page does not exist');
         }
     }
 }

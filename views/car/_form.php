@@ -20,6 +20,9 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($type, 'categoryId')->dropDownList(Car::CATEGORY_ID) ?>
 
+    <?php if (!$type->model->isNewRecord): ?>
+        <img src="<?= $type->model->getUrlImage(); ?>" alt="">
+    <?php endif; ?>
 
     <?= $form->field($type, 'image')->fileInput() ?>
 

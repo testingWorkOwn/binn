@@ -10,7 +10,9 @@ namespace app\services;
 
 
 use app\models\Car;
+use app\models\CarRepository;
 use app\models\CarType;
+use Yii;
 use yii\helpers\FileHelper;
 use yii\web\UploadedFile;
 
@@ -24,16 +26,23 @@ class CarService
      * @var BaseService
      */
     private $baseService;
+    /**
+     * @var CarRepository
+     */
+    private $carRepository;
 
     /**
      * CarService constructor.
      * @param BaseService $baseService
+     * @param CarRepository $carRepository
      */
     public function __construct(
-        BaseService $baseService
+        BaseService $baseService,
+        CarRepository $carRepository
     )
     {
         $this->baseService = $baseService;
+        $this->carRepository = $carRepository;
     }
 
 
@@ -50,24 +59,46 @@ class CarService
     }
 
     /**
+     * @param int $id
      * @param CarType $type
+     * @return Car|null
      */
-    public function update(CarType $type)
+    public function update($id, CarType $type)
     {
-
+        $model = $this->carRepository->findOne($id);
+        $this->baseService->createNotFoundHttpException($model);
+        $model->edit($type);
+        if ($type->image instanceof UploadedFile) {
+            $oldImage = $model->image;
+            $model->image = $this->uploadImage($type->image);
+            $this->removeImage($oldImage);
+        }
+        $this->baseService->save($model);
+        return $model;
     }
 
     /**
      * @param UploadedFile $file
      * @return string
      */
-    public function uploadImage(UploadedFile $file)
+    public function uploadImage(UploadedFile $file): string
     {
         $name = md5(uniqid()) . '.' . $file->getExtension();
-        $path = \Yii::getAlias('@webroot') . Car::PATH_UPLOAD_PHOTO;
+        $path = Yii::getAlias('@webroot') . Car::PATH_UPLOAD_PHOTO;
         FileHelper::createDirectory($path);
         $file->saveAs($path . '/' . $name);
         return $name;
+    }
+
+    /**
+     * @param string $image
+     */
+    public function removeImage(string $image): void
+    {
+        $path = Yii::getAlias('@webroot') . Car::PATH_UPLOAD_PHOTO . '/' . $image;
+        if (is_file($path)) {
+            unlink($path);
+        }
     }
 
     /**
@@ -76,6 +107,6 @@ class CarService
      */
     public function createType(Car $model)
     {
-        return \Yii::createObject(CarType::class, [$model]);
+        return Yii::createObject(CarType::class, [$model]);
     }
 }

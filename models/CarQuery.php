@@ -31,4 +31,14 @@ class CarQuery extends \yii\db\ActiveQuery
     {
         return parent::one($db);
     }
+
+
+    /**
+     * @param string $url
+     * @return $this
+     */
+    public function url(string $url)
+    {
+        return $this->andWhere([Car::tableName() . '.[[url]]' => $url]);
+    }
 }
