@@ -9,8 +9,11 @@
 namespace app\controllers;
 
 
+use app\models\CarRepository;
 use app\models\CarSearch;
+use app\services\BaseService;
 use Yii;
+use yii\base\Module;
 use yii\web\Controller;
 
 /**
@@ -19,6 +22,37 @@ use yii\web\Controller;
  */
 class CarController extends Controller
 {
+    /**
+     * @var CarRepository
+     */
+    private $carRepository;
+
+    /**
+     * @var BaseService
+     */
+    private $baseService;
+
+    /**
+     * CarController constructor.
+     * @param string $id
+     * @param Module $module
+     * @param CarRepository $carRepository
+     * @param BaseService $baseService
+     * @param array $config
+     */
+    public function __construct(
+        $id,
+        Module $module,
+        CarRepository $carRepository,
+        BaseService $baseService,
+        array $config = []
+    )
+    {
+        parent::__construct($id, $module, $config);
+        $this->carRepository = $carRepository;
+        $this->baseService = $baseService;
+    }
+
 
     /**
      * @return string
@@ -34,8 +68,15 @@ class CarController extends Controller
         ]);
     }
 
+    /**
+     * @param $id
+     * @return string
+     */
     public function actionView($id)
     {
+        $model = $this->carRepository->findOne($id);
+        $this->baseService->createNotFoundHttpException($model);
 
+        return $this->render('view', ['model' => $model]);
     }
 }
