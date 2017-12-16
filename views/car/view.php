@@ -8,6 +8,7 @@ use yii\helpers\Html;
 $this->title = $model->title;
 $this->params['breadcrumbs'][] = ['label' => 'Cars', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
+
 ?>
 <div class="car-view">
 
