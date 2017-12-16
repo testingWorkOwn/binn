@@ -77,6 +77,17 @@ class CarService
         return $model;
     }
 
+
+    /**
+     * @param $id
+     */
+    public function delete($id)
+    {
+        $model = $this->carRepository->findOne($id);
+        $this->baseService->createNotFoundHttpException($model);
+        $this->baseService->delete($model);
+    }
+
     /**
      * @param UploadedFile $file
      * @return string

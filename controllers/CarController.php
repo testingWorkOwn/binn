@@ -11,7 +11,6 @@ use app\models\Car;
 use app\models\CarSearch;
 use yii\base\Module;
 use yii\web\Controller;
-use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
 /**
@@ -94,8 +93,10 @@ class CarController extends Controller
      */
     public function actionView($id)
     {
+        $model = $this->carRepository->findOne($id);
+        $this->baseService->createNotFoundHttpException($model);
         return $this->render('view', [
-            'model' => $this->findModel($id),
+            'model' => $model,
         ]);
     }
 
@@ -161,24 +162,7 @@ class CarController extends Controller
      */
     public function actionDelete($id)
     {
-        $this->findModel($id)->delete();
-
+        $this->carService->delete($id);
         return $this->redirect(['index']);
-    }
-
-    /**
-     * Finds the Car model based on its primary key value.
-     * If the model is not found, a 404 HTTP exception will be thrown.
-     * @param integer $id
-     * @return Car the loaded model
-     * @throws NotFoundHttpException if the model cannot be found
-     */
-    protected function findModel($id)
-    {
-        if (($model = Car::findOne($id)) !== null) {
-            return $model;
-        } else {
-            throw new NotFoundHttpException('The requested page does not exist.');
-        }
     }
 }

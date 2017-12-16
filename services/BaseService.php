@@ -38,4 +38,14 @@ class BaseService
             throw new NotFoundHttpException('The required page does not exist');
         }
     }
+
+    /**
+     * @param ActiveRecord $model
+     */
+    public function delete(ActiveRecord $model)
+    {
+        if (!$model->delete()) {
+            throw new \RuntimeException('Saving error');
+        }
+    }
 }
