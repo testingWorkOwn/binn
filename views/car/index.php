@@ -2,6 +2,7 @@
 
 use app\models\Car;
 use yii\helpers\Html;
+use yii\widgets\LinkPager;
 
 /* @var $this yii\web\View */
 /* @var $searchModel app\models\CarSearch */
@@ -31,4 +32,7 @@ $this->params['breadcrumbs'][] = $this->title;
             </tr>
         <?php endforeach; ?>
     </table>
+
+    <?= LinkPager::widget(['pagination' => $dataProvider->getPagination()]) ?>
+
 </div>
